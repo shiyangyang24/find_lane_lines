@@ -17,7 +17,20 @@ lane_find.py is my project code and the test_on_my_camera.py is the project code
 (3)Applies an image mask.
     Only keeps the region of the image defined by the polygon  formed from vertices. The rest of the image is set to black and the region of image.
 
-(4)we can extract yellow and white in HSV color space:line 155 to line 167
+(4)we can extract yellow and white in HSV color space:
+
+ def color_select(img):
+  hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+  lower_yellow = np.array([10, 110, 110])
+  upper_yellow = np.array([20, 225, 225])
+  yellow_mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
+  lower_white = np.array([0, 0, 215])
+  upper_white = np.array([170, 30, 235])
+  white_mask = cv2.inRange(hsv, lower_white, upper_white)
+  color_mask = cv2.bitwise_or(yellow_mask, white_mask)
+  gray = grayscale(img)
+  darken = (gray / 3).astype(np.uint8)
+  color_masked = cv2.bitwise_or(darken, color_mask)
 
 (5)Use least squares to fit lane lines:
     this is the function you might want to use as a starting point once you want to average/extrapolate the line segments you detect to map out the full extent of the lane.
